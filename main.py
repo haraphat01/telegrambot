@@ -31,11 +31,13 @@ def handle_message(update):
         if "text" in message:
             message_text = message["text"]
             chat_id = message["chat"]["id"]
-            if chat_id not in unique_users:
-                unique_users.add(chat_id)
+            existing_chat = collection.find_one({"chat_id": chat_id})
+            if existing_chat:
+                collection.update_one({"chat_id": chat_id}, {"$set": {"chat_id": chat_id}})
                 # Send a POST request to the Airtable API to add a new row
+            else:
                 collection.insert_one({
-                "chat_id": chat_id
+                "chat_id": chat_id, 
                 })
             model = "text-davinci-003"
             temperature = 0.8
