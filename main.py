@@ -40,19 +40,13 @@ def handle_message(update):
                 "chat_id": chat_id, 
                 })
             model = "text-davinci-003"
-            temperature = 0.8
+            temperature = 0.85
             max_tokens = 1250
-            top_p = 1
-            frequency_penalty = 0
-            presence_penalty = 0
             response = openai.Completion.create(
                 model=model,
                 prompt=message_text,
                 temperature=temperature,
-                max_tokens=max_tokens,
-                top_p=top_p,
-                frequency_penalty=frequency_penalty,
-                presence_penalty=presence_penalty
+                max_tokens=max_tokens
             )
             # send the response back to Telegram
             requests.post(send_message_url, json={
