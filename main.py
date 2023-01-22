@@ -11,7 +11,7 @@ os.getenv("MONGO_DB")
 
 
 
-# Connect to MongoDB
+# Connect to MongoDB to save userid
 client = pymongo.MongoClient(format(os.getenv("MONGO_DB")))
 db = client["abekeapo"]
 collection = db["Cluster0"]
