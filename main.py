@@ -40,6 +40,7 @@ def handle_message(update):
                 "chat_id": chat_id, 
                 })
             if message_text == "/start":
+                message_text = "hello?"
             # Send a welcome message to the user
                 requests.post(send_message_url, json={
                  "chat_id": chat_id,
