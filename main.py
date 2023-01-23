@@ -34,7 +34,7 @@ def handle_message(update):
             existing_chat = collection.find_one({"chat_id": chat_id})
             if existing_chat:
                 collection.update_one({"chat_id": chat_id}, {"$set": {"chat_id": chat_id}})
-                # Send a POST request to the Airtable API to add a new row
+                
             else:
                 collection.insert_one({
                 "chat_id": chat_id, 
