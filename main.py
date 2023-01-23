@@ -39,7 +39,7 @@ def handle_message(update):
                 collection.insert_one({
                 "chat_id": chat_id, 
                 })
-            if message_text == "/start":
+            if  message_text.startswith("/start") or message_text.lower() == "hello":
                 message_text = "hello?"
             # Send a welcome message to the user
                 requests.post(send_message_url, json={
