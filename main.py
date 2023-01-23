@@ -44,7 +44,7 @@ def handle_message(update):
             # Send a welcome message to the user
                 requests.post(send_message_url, json={
                  "chat_id": chat_id,
-                "text": "Welcome to the bot! How can I help you today?"
+                "text": "You're welcome, I can help you achieve a lot"
                 })
             model = "text-davinci-003"
             temperature = 0.85
