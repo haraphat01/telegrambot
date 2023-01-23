@@ -39,6 +39,12 @@ def handle_message(update):
                 collection.insert_one({
                 "chat_id": chat_id, 
                 })
+            if message_text == "/start":
+            # Send a welcome message to the user
+                requests.post(send_message_url, json={
+                 "chat_id": chat_id,
+                "text": "Welcome to the bot! How can I help you today?"
+                })
             model = "text-davinci-003"
             temperature = 0.85
             max_tokens = 1250
