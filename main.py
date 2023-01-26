@@ -47,8 +47,8 @@ def handle_message(update):
                 "text": "You're welcome, I can help you achieve a lot"
                 })
             model = "text-davinci-003"
-            temperature = 0.85
-            max_tokens = 1250
+            temperature = 0.7
+            max_tokens = 256
             response = openai.Completion.create(
                 model=model,
                 prompt=message_text,
