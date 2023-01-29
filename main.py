@@ -47,19 +47,25 @@ def handle_message(update):
                 "text": "You're welcome, I can help you achieve a lot"
                 })
             model = "text-davinci-003"
-            temperature = 0.8
+            temperature = 0.7
             max_tokens = 256
-            response = openai.Completion.create(
-                model=model,
-                prompt=message_text,
-                temperature=temperature,
-                max_tokens=max_tokens
-            )
-            # send the response back to Telegram
-            requests.post(send_message_url, json={
-                "chat_id": chat_id,
-                "text": response["choices"][0]["text"].strip()
-            })
+            try:
+                response = openai.Completion.create(
+                    model=model,
+                    prompt=message_text,
+                    temperature=temperature,
+                    max_tokens=max_tokens
+                )
+                # send the response back to Telegram
+                requests.post(send_message_url, json={
+                    "chat_id": chat_id,
+                    "text": response["choices"][0]["text"].strip()
+                })
+            except:
+                requests.post(send_message_url, json={
+                    "chat_id": chat_id,
+                    "text": "I'm sorry, there was an error processing your request. Please try again later."
+                })  
             global last_update_id
             last_update_id = update["update_id"]
         else:
