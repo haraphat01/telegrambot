@@ -4,6 +4,7 @@ import openai
 import time
 from dotenv import load_dotenv
 import pymongo
+
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 os.getenv("TELEGRAM_API_KEY")
@@ -70,6 +71,7 @@ def handle_message(update):
             last_update_id = update["update_id"]
         else:
             print("No text in the message")
+        
     else:
         print("No message in update")
         
