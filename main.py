@@ -48,7 +48,7 @@ def handle_message(update):
                 })
             model = "text-davinci-003"
             temperature = 0.7
-            max_tokens = 256
+            max_tokens = 500
             try:
                 response = openai.Completion.create(
                     model=model,
