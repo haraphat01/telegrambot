@@ -4,10 +4,14 @@ import openai
 import time
 from dotenv import load_dotenv
 import pymongo
+import datetime
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 os.getenv("TELEGRAM_API_KEY")
 os.getenv("MONGO_DB")
+
+now = datetime.datetime.now()
+current_month = now.month
 
 
 
@@ -32,12 +36,26 @@ def handle_message(update):
             message_text = message["text"]
             chat_id = message["chat"]["id"]
             existing_chat = collection.find_one({"chat_id": chat_id})
+            current_month = time.strftime("%m") # get the current month
+            if existing_chat and existing_chat.get("month") == current_month and existing_chat.get("requests") >= 30:
+                requests.post(send_message_url, json={
+                    "chat_id": chat_id,
+                    "text": "You have used up your monthly request limit. Please try again next month."
+                })
+                return
             if existing_chat:
-                collection.update_one({"chat_id": chat_id}, {"$set": {"chat_id": chat_id}})
+                # If it's a new month, reset the request count
+                if existing_chat.get("month") != current_month:
+                    collection.update_one({"chat_id": chat_id}, {"$set": {"month": current_month, "requests": 1}})
+                else:
+                    collection.update_one({"chat_id": chat_id}, {"$inc": {"requests": 1}})
                 
             else:
+                # Add the user to the database for the first time
                 collection.insert_one({
                 "chat_id": chat_id, 
+                "month": current_month,
+                "requests": 1
                 })
             if  message_text.startswith("/start") or message_text.lower() == "hello":
                 message_text = "hello?"
@@ -84,3 +102,42 @@ while True:
         print("No updates to retrieve.")
     time.sleep(5)
     
+    
+    
+    
+
+
+
+def handle_message(update):
+    if "message" in update:
+        message = update["message"]
+        if "text" in message:
+            message_text = message["text"]
+            chat_id = message["chat"]["id"]
+            existing_chat = collection.find_one({"chat_id": chat_id})
+            
+            current_month = time.strftime("%m") # get the current month
+            
+            # Check if the user has used up their monthly request limit
+            if existing_chat and existing_chat.get("month") == current_month and existing_chat.get("requests") >= 30:
+                requests.post(send_message_url, json={
+                    "chat_id": chat_id,
+                    "text": "You have used up your monthly request limit. Please try again next month."
+                })
+                return
+            
+            if existing_chat:
+                # If it's a new month, reset the request count
+                if existing_chat.get("month") != current_month:
+                    collection.update_one({"chat_id": chat_id}, {"$set": {"month": current_month, "requests": 1}})
+                else:
+                    collection.update_one({"chat_id": chat_id}, {"$inc": {"requests": 1}})
+                
+            else:
+                # Add the user to the database for the first time
+                collection.insert_one({
+                "chat_id": chat_id, 
+                "month": current_month,
+                "requests": 1
+                })
+            # Rest of the code...
