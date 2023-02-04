@@ -36,26 +36,32 @@ def handle_message(update):
             message_text = message["text"]
             chat_id = message["chat"]["id"]
             existing_chat = collection.find_one({"chat_id": chat_id})
-            current_month = time.strftime("%m") # get the current month
-            if existing_chat and existing_chat.get("month") == current_month and existing_chat.get("requests") >= 30:
-                requests.post(send_message_url, json={
-                    "chat_id": chat_id,
-                    "text": "You have used up your monthly request limit. Please try again next month."
-                })
-                return
             if existing_chat:
-                # If it's a new month, reset the request count
-                if existing_chat.get("month") != current_month:
-                    collection.update_one({"chat_id": chat_id}, {"$set": {"month": current_month, "requests": 1}})
-                else:
-                    collection.update_one({"chat_id": chat_id}, {"$inc": {"requests": 1}})
-                
+                request_count = existing_chat.get("request_count", 0)
+                last_reset_time = existing_chat.get("last_reset_time", None)
+                # Check if a month has passed since the last reset
+                if last_reset_time:
+                    now = datetime.datetime.now()
+                    if now.month != last_reset_time.month:
+                        request_count = 0
+                # Check if the user has reached their limit for the month
+                if request_count >= 30:
+                    requests.post(send_message_url, json={
+                        "chat_id": chat_id,
+                        "text": "You have reached your monthly limit of 30 requests. Please try again next month."
+                    })
+                    return
+                # Update the request count and last reset time in the database
+                collection.update_one({"chat_id": chat_id}, {"$set": {
+                    "request_count": request_count + 1,
+                    "last_reset_time": datetime.datetime.now()
+                }})
             else:
-                # Add the user to the database for the first time
+                # Create a new entry for the user in the database with request count = 1
                 collection.insert_one({
-                "chat_id": chat_id, 
-                "month": current_month,
-                "requests": 1
+                    "chat_id": chat_id,
+                    "request_count": 1,
+                    "last_reset_time": datetime.datetime.now()
                 })
             if  message_text.startswith("/start") or message_text.lower() == "hello":
                 message_text = "hello?"
