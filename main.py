@@ -42,7 +42,7 @@ def handle_message(update):
                     "chat_id": chat_id,
                     "text": "You have used up your monthly request limit. Please try again next month."
                 })
-                return
+                return "break"
             if existing_chat:
                 # If it's a new month, reset the request count
                 if existing_chat.get("month") != current_month:
@@ -93,14 +93,15 @@ def handle_message(update):
         
 
 while True:
-    response = requests.get(update_url, params={"offset": last_update_id+1})
-    if "result" in response.json():
+     response = requests.get(update_url, params={"offset": last_update_id+1})
+     if "result" in response.json():
         updates = response.json()["result"]
         for update in updates:
-            handle_message(update)
-    else:
+            if handle_message(update) == "break":
+                break
+     else:
         print("No updates to retrieve.")
-    time.sleep(5)
+     time.sleep(5)
     
     
     
