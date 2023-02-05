@@ -47,7 +47,7 @@ def handle_message(update):
                         "text": "You have reached your monthly limit of 30 requests.\n Please try again next month. You can subscribe to premium service at $5 monthly or $50 yearly for unlimited request.\n You can currently pay with Etherum, Bnb, Busd and Usdt. Pay to this wallet address \n '0x983e746eDEa971338344D67E6DF755BbC37c8F76' \n and contact https://t.me/pencil_support to activate your account"
                     })
                     
-                                   # Update the request count and last reset time in the database
+                    return               # Update the request count and last reset time in the database
                 collection.update_one({"chat_id": chat_id}, {"$inc": {"num_requests": 1}})
                 if first_request_month is None:
                     collection.update_one({"chat_id": chat_id}, {"$set": {"first_request_month": current_month}})
