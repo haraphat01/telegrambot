@@ -41,7 +41,7 @@ def handle_message(update):
                     "chat_id": chat_id,
                     "text": "You have used up your monthly request limit. Please try again next month."
                 })
-                return "break"
+                return True
             if existing_chat:
                 # If it's a new month, reset the request count
                 if existing_chat.get("month") != current_month:
@@ -61,7 +61,7 @@ def handle_message(update):
             # Send a welcome message to the user
                 requests.post(send_message_url, json={
                  "chat_id": chat_id,
-                "text": "You're welcome, I can help you achieve a lot"
+                "text": "You're welcome, I can help you achieve a lot, just ask your question"
                 })
             model = "text-davinci-003"
             temperature = 0.7
