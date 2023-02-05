@@ -26,7 +26,6 @@ send_message_url = "https://api.telegram.org/bot{}/sendMessage".format(os.getenv
 
 
 # Set to keep track of unique users
-unique_users = set()
 last_update_id = 0
 # Function to handle incoming messages
 def handle_message(update):
@@ -97,13 +96,13 @@ while True:
      if "result" in response.json():
         updates = response.json()["result"]
         for update in updates:
-            if handle_message(update) == "break":
+            handle_message_result = handle_message(update)
+            if handle_message_result == "break":
                 break
      else:
         print("No updates to retrieve.")
      time.sleep(5)
-    
-    
+
     
     
 
