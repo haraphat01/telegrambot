@@ -48,7 +48,9 @@ def handle_message(update):
                 if request_count >= 30:
                     requests.post(send_message_url, json={
                         "chat_id": chat_id,
-                        "text": "You have reached your monthly limit of 30 requests. Please try again next month."
+                        "text": "You have reached your monthly limit of 30 requests. Please try again next month. You can subscribe to premium service at $5 monthly or $50 year for unlimited request. You can currently pay with Etherum, Bnb, Busd and Usdt. Pay to this wallet address '0x983e746eDEa971338344D67E6DF755BbC37c8F76' and contact https://t.me/pencil_support to activate your account"
+                        
+                        
                     })
                     return
                 # Update the request count and last reset time in the database
