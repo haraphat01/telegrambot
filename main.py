@@ -39,7 +39,7 @@ def handle_message(update):
             if existing_chat and existing_chat.get("month") == current_month and existing_chat.get("requests") >= 30:
                 requests.post(send_message_url, json={
                     "chat_id": chat_id,
-                    "text": "You have reached your monthly limit of 30 requests.\n Please try again next month. You can subscribe to premium service at $6 (vat included) monthly for unlimited request.\n You can make your payment with this link https://flutterwave.com/pay/bxc7rlwswwma \n and contact https://t.me/pencil_support to activate your account"
+                    "text": "You have reached your monthly limit of 30 requests.\n Please try again next month. You can subscribe to premium service at $6 (vat included) monthly for unlimited request.\n You can make your payment with this link https://flutterwave.com/pay/jaxo69x9x929 \n and contact https://t.me/pencil_support to activate your account"
                 })
                 return True
             if existing_chat:
