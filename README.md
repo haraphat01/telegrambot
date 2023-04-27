@@ -1,4 +1,4 @@
-# telegrambot
+# Pencilbot
 Telegram Chatbot with OpenAI ChatGPT
 This Telegram chatbot uses OpenAI's ChatGPT to provide natural language responses to user inputs. The bot is built with Python, and uses the Telegram Bot API to communicate with users. User IDs are stored in a MongoDB database for personalized interactions.
 
