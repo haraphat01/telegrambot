@@ -13,9 +13,9 @@ os.getenv("MONGO_DB")
 now = datetime.datetime.now()
 current_month = now.month
 
-# PAI_TOKEN = "\n \n This chat is powered by PAI Token"
-# Twitter = "\n \n Kindly follow our twitter page`{https://twitter.com/pencil__ai}` and telegram group"
-# Telegram = "\n \n Kindly join our telegram group`{https://t.me/pencilAI}`"
+PAI_TOKEN = "\n \n This chat is powered by PAI Token"
+Twitter = "\n \n Kindly follow our twitter page`{https://twitter.com/pencil__ai}` and telegram group"
+Telegram = "\n \n Kindly join our telegram group`{https://t.me/pencilAI}`"
 
 # Connect to MongoDB to save userid
 client = pymongo.MongoClient(format(os.getenv("MONGO_DB")))
@@ -78,7 +78,7 @@ def handle_message(update):
                 # send the response back to Telegram
                 requests.post(send_message_url, json={
                     "chat_id": chat_id,
-                    "text": response["choices"][0]["text"].strip()
+                    "text": response["choices"][0]["text"].strip() + PAI_TOKEN + Twitter + Telegram
                 })
             except:
                 requests.post(send_message_url, json={
