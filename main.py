@@ -77,7 +77,7 @@ def handle_message(update):
                 # send the response back to Telegram
                 requests.post(send_message_url, json={
                     "chat_id": chat_id,
-                    "text": response["choices"][0]["text"].strip() + PAI_TOKEN + Twitter + Telegram
+                    "text": response["choices"][0]["text"].strip() + PAI_TOKEN + Telegram
                 })
             except:
                 requests.post(send_message_url, json={
@@ -90,8 +90,6 @@ def handle_message(update):
             print("No text in the message")
     else:
         print("No message in update")
-        
-
 while True:
      response = requests.get(update_url, params={"offset": last_update_id+1})
      if "result" in response.json():
