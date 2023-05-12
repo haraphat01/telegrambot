@@ -13,7 +13,9 @@ os.getenv("MONGO_DB")
 now = datetime.datetime.now()
 current_month = now.month
 
-
+# PAI_TOKEN = "\n \n This chat is powered by PAI Token"
+# Twitter = "\n \n Kindly follow our twitter page`{https://twitter.com/pencil__ai}` and telegram group"
+# Telegram = "\n \n Kindly join our telegram group`{https://t.me/pencilAI}`"
 
 # Connect to MongoDB to save userid
 client = pymongo.MongoClient(format(os.getenv("MONGO_DB")))
@@ -36,7 +38,7 @@ def handle_message(update):
             chat_id = message["chat"]["id"]
             existing_chat = collection.find_one({"chat_id": chat_id})
             current_month = time.strftime("%m") # get the current month
-            if existing_chat and existing_chat.get("month") == current_month and existing_chat.get("requests") >= 30:
+            if existing_chat and existing_chat.get("month") == current_month and existing_chat.get("requests") >= 60:
                 requests.post(send_message_url, json={
                     "chat_id": chat_id,
                     "text": "You have reached your monthly limit of 30 requests.\n Please try again next month. You can subscribe to premium service at $6 (vat included) monthly for unlimited request.\n You can make your payment with this link https://flutterwave.com/pay/jaxo69x9x929 \n and contact https://t.me/pencil_support to activate your account"
@@ -61,7 +63,7 @@ def handle_message(update):
             # Send a welcome message to the user
                 requests.post(send_message_url, json={
                  "chat_id": chat_id,
-                "text": "You're welcome, I can help you achieve a lot, just ask your question"
+                "text": "This is Pencilchat, may I know how I can help you?"
                 })
             model = "text-davinci-003"
             temperature = 0.7
@@ -81,7 +83,7 @@ def handle_message(update):
             except:
                 requests.post(send_message_url, json={
                     "chat_id": chat_id,
-                    "text": "I'm sorry, there was an error processing your request. Please try again later."
+                    "text": "I'm sorry, there was an error processing your request from our third party service providers. Please try again later."
                 })  
             global last_update_id
             last_update_id = update["update_id"]
@@ -99,8 +101,6 @@ while True:
             handle_message_result = handle_message(update)
             if handle_message_result == "break":
                 break
-     else:
-        print("No updates to retrieve.")
      time.sleep(5)
 
     
