@@ -42,7 +42,7 @@ def handle_message(update):
                     "chat_id": chat_id,
                     "text": "You have reached your monthly limit of 30 requests"
                 })
-                return True
+                return True # add return statement here
             if existing_chat:
                 # If it's a new month, reset the request count
                 if existing_chat.get("month") != current_month:
