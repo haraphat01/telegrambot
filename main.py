@@ -13,7 +13,7 @@ os.getenv("MONGO_DB")
 now = datetime.datetime.now()
 current_month = now.month
 
-PAI_TOKEN = "\n \n This chat is powered by PAI Token"
+PAI_TOKEN = "\n \n Any donations you can make are greatly appreciated and will help us keep our project running, you can support with crypto with this address: 0xe641CF6BE57406485c76a7CD59d1c5B53b99520F"
 Telegram = "\n \n Kindly join our telegram group https://t.me/pencilAI"
 
 # Connect to MongoDB to save userid
