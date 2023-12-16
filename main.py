@@ -38,6 +38,33 @@ def handle_message(update):
         if "text" in message:
             message_text = message["text"]
             chat_id = message["chat"]["id"]
+            bot_name = "@TajiriBot"
+            if bot_name in message_text:
+                # Extract the user's question
+                question = message_text.split(bot_name)[0].strip()
+                print("User's question:", question) 
+                # Send the user's question to OpenAI for a response
+                # response = openai.Completion.create(
+                #     model="your-openai-model",
+                #     prompt=question,
+                # )
+                model = "mistralai/Mixtral-8x7B-Instruct-v0.1"
+                chat_completion = client.chat.completions.create(
+                    messages=[
+                {
+                    "role": "user",
+                    "content": question,
+                }
+                            ],
+                    model= model
+                )
+                # Tag the user and send the response back to the Telegram group
+                response_text = f"@{message['from']['username']} {chat_completion.choices[0].message.content.strip()}"
+                requests.post(send_message_url, json={
+                    "chat_id": chat_id,
+                    "text": response_text
+                })
+                
             existing_chat = collection.find_one({"chat_id": chat_id})
             current_month = time.strftime("%m") # get the current month
             if existing_chat and existing_chat.get("month") == current_month and existing_chat.get("requests") >= 60:
@@ -67,7 +94,7 @@ def handle_message(update):
                  "chat_id": chat_id,
                 "text": "This is PencilAI, may I know how I can help you?"
                 })
-            model = "mistralai/Mixtral-8x7B-Instruct-v0.1"
+          
             try:
                 # response = openai.Completion.create(
                 #     model=model,
@@ -100,6 +127,7 @@ def handle_message(update):
             print("No text in the message")
     else:
         print("No message in update")
+        print("User's question:", question) 
 while True:
      response = requests.get(update_url, params={"offset": last_update_id+1})
      if "result" in response.json():
@@ -109,3 +137,4 @@ while True:
             if handle_message_result == "break":
                 break
      time.sleep(5)
+print("User's question:") 
