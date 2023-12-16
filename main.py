@@ -13,7 +13,7 @@ os.getenv("MONGO_DB")
 now = datetime.datetime.now()
 current_month = now.month
 
-PAI_TOKEN = "\n \n Any donations you can make are greatly appreciated and will help us keep our project running, you can support with crypto with this address: 0xe641CF6BE57406485c76a7CD59d1c5B53b99520F"
+PAI_TOKEN = "\n \n Any donations you can make are greatly appreciated and will help us keep our "
 Telegram = "\n \n Kindly join our telegram group https://t.me/pencilAI"
 
 # Connect to MongoDB to save userid
@@ -24,7 +24,10 @@ collection = db["Cluster0"]
 
 update_url = "https://api.telegram.org/bot{}/getUpdates".format(os.getenv("TELEGRAM_API_KEY"))
 send_message_url = "https://api.telegram.org/bot{}/sendMessage".format(os.getenv("TELEGRAM_API_KEY"))
-
+client = openai.OpenAI(
+    api_key=os.environ.get("TOGETHER_API_KEY"),
+    base_url='https://api.together.xyz',
+)
 
 # Set to keep track of unique users
 last_update_id = 0
@@ -62,22 +65,29 @@ def handle_message(update):
             # Send a welcome message to the user
                 requests.post(send_message_url, json={
                  "chat_id": chat_id,
-                "text": "This is Pencilchat, may I know how I can help you?"
+                "text": "This is PencilAI, may I know how I can help you?"
                 })
-            model = "text-davinci-003"
-            temperature = 0.7
-            max_tokens = 500
+            model = "mistralai/Mixtral-8x7B-Instruct-v0.1"
             try:
-                response = openai.Completion.create(
-                    model=model,
-                    prompt=message_text,
-                    temperature=temperature,
-                    max_tokens=max_tokens
+                # response = openai.Completion.create(
+                #     model=model,
+                #     prompt=message_text,
+                #     temperature=temperature,
+                #     max_tokens=max_tokens
+                # )
+                chat_completion = client.chat.completions.create(
+                    messages=[
+                {
+                    "role": "user",
+                    "content": message_text,
+                }
+                            ],
+                    model= model
                 )
                 # send the response back to Telegram
                 requests.post(send_message_url, json={
                     "chat_id": chat_id,
-                    "text": response["choices"][0]["text"].strip() + PAI_TOKEN + Telegram
+                    "text": chat_completion.choices[0].message.content.strip()
                 })
             except:
                 requests.post(send_message_url, json={
